@@ -214,6 +214,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreModel: {fileID: 252732225}
+  buttonAddScore: {fileID: 177602402}
 --- !u!1 &252732223
 GameObject:
   m_ObjectHideFlags: 0

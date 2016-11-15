@@ -39,6 +39,9 @@ namespace Workbook03
 		// Use this for initialization
 		void Start()
 		{
+			buttonAddScore
+				.OnClickAsObservable()
+				.Subscribe(_ => scoreModel.score.Value++);
 		}
 	}
 }

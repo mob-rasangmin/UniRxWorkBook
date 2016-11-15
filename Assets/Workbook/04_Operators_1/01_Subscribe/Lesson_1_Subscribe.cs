@@ -10,8 +10,8 @@ namespace UniRxWorkBook.Operators
         private void Start()
         {
             // _____()の部分を正しい形に置換してCubeが回転するようにしよう
-            this.UpdateAsObservable()._____();
-        }
+			this.UpdateAsObservable().Subscribe( _ => RotateCube());
+		}
 
         private void RotateCube()
         {

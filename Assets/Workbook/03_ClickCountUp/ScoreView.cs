@@ -38,6 +38,8 @@ namespace Workbook03
 		// Use this for initialization
 		void Start()
 		{
+			scoreModel.score
+				.SubscribeToText(textScore);
 		}
 	}
 }

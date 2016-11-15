@@ -26,7 +26,7 @@ namespace UniRxWorkBook.Operators
             leftStream
                 .Zip(rightStream, (l, r) => Unit.Default)
                 .First()
-                ._____()
+                .Repeat()
                 .SubscribeToText(resultLabel, _ => resultLabel.text += "OK\n");
         }
     }

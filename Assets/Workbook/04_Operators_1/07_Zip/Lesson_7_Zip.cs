@@ -21,8 +21,8 @@ namespace UniRxWorkBook.Operators
 
             // _____を書き換え、LeftとRightが両方共最低１回ずつ押された時にTextが書き換わるようにしてみよう
             leftStream
-                ._____()
-                .First()
+                .Zip(rightStream, (l, r) => Unit.Default)
+				.First()
                 .SubscribeToText(resultLabel, _ => "OK");
         }
 

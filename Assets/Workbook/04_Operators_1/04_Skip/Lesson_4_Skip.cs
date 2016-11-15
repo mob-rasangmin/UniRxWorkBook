@@ -14,7 +14,7 @@ namespace UniRxWorkBook.Operators
                 .Where(_ => Input.GetMouseButtonDown(0));
 
             this.UpdateAsObservable()
-                .SkipUntil(clickStream._____())
+                .SkipUntil(clickStream.Skip(2))
                 .Subscribe(_ => RotateCube());
         }
 

@@ -26,7 +26,7 @@ namespace UniRxWorkBook.Operators
 
             // _____を書き換え、最初の１回目が押された時のみTextが書き換わるようにしよう
             Observable.Merge(aStream, bStream, cStream)
-                ._____()
+                .FirstOrDefault()
                 .SubscribeToText(resultLabel);
         }
 
