@@ -14,7 +14,9 @@ namespace UniRxWorkBook.Operators
         [SerializeField] private Button offButton;
         [SerializeField] private GameObject cube;
 
-        private void Start()
+        [SerializeField] private GameObject repeatUntilDestroy;
+
+		private void Start()
         {
             // ____を書き換え、OFFのボタンを押したら回転が止まるようにしよう
 
@@ -22,14 +24,13 @@ namespace UniRxWorkBook.Operators
             var offStream = offButton.OnClickAsObservable();
 
             this.UpdateAsObservable()
-                .SkipUntil(onStream)
-                ._____()
-                .RepeatUntilDestroy(gameObject)
-                .Subscribe(_ => RotateCube());
+				.SkipUntil(onStream)
+				.TakeUntil(offStream)
+				.RepeatUntilDestroy(repeatUntilDestroy)
+				.Subscribe(_ => RotateCube());
+		}
 
-        }
-
-        private void RotateCube()
+		private void RotateCube()
         {
             cube.transform.rotation = Quaternion.AngleAxis(1.0f, Vector3.up) * cube.transform.rotation;
         }

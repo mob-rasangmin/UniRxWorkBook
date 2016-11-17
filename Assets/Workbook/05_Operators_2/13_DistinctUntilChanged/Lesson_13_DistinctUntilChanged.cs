@@ -25,7 +25,7 @@ namespace UniRxWorkBook
 
             this.UpdateAsObservable()
                 .Select(_ => controller.isGrounded)
-                ._____()
+                .DistinctUntilChanged()
                 .Subscribe(isGrounded => StatusOutput(isGrounded));
         }
 
