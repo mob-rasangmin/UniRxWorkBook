@@ -45,7 +45,30 @@ public class FromCoroutine_1 : MonoBehaviour {
 
 
 	// Use this for initialization
-	void Start () {
+	void Start()
+	{
+		var aStream = Observable.FromCoroutine(observer => CoroutineA());
+		var bStream = Observable.FromCoroutine(observer => CoroutineB());
+		var cStream = Observable.FromCoroutineValue<string>(ovserver => CoroutineC());
+		var dStream = Observable.FromCoroutineValue<string>(ovserver => CoroutineD());
+
+		buttonA.OnClickAsObservable().SelectMany(aStream)
+			.Select(value => "A実行完了")
+			.SubscribeToText(text);
+
+		buttonB.OnClickAsObservable()
+			.SelectMany(aStream)
+			.SelectMany(bStream)
+			.Select(value => "B実行完了")
+			.SubscribeToText(text);
+
+		buttonC.OnClickAsObservable()
+			.SelectMany(cStream)
+			.SubscribeToText(text);
+
+		buttonD.OnClickAsObservable()
+			.SelectMany(cStream.Concat(dStream))
+			.SubscribeToText(text);
 	}
 
 	IEnumerator CoroutineA()
@@ -82,6 +105,7 @@ public class FromCoroutine_1 : MonoBehaviour {
 		yield return new WaitForSeconds(1);
 		yield return "Apple-pen";
 		yield return new WaitForSeconds(1);
+		yield return "C実行完了";
 	}
 
 	IEnumerator CoroutineD()
@@ -94,5 +118,6 @@ public class FromCoroutine_1 : MonoBehaviour {
 		yield return new WaitForSeconds(1);
 		yield return "Pineapple-pen";
 		yield return new WaitForSeconds(1);
+		yield return "D実行完了";
 	}
 }
