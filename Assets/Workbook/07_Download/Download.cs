@@ -42,18 +42,24 @@ public class Download : MonoBehaviour
 	[SerializeField]Text text;
 	[SerializeField]Slider progressBar;
 
+	private string url = "https://github.com/neuecc/UniRx/archive/5.5.0.zip";
 
 	// Use this for initialization
 	void Start()
 	{
+		var progressNotifier = new ScheduledNotifier<float>();
+		progressNotifier.Subscribe(x =>	progressBar.value = x );
+
 		button.OnClickAsObservable()
+			.Do(action => button.interactable = false)
 			.Subscribe(_ =>
-		{
-			StartCoroutine(DownloadWWW("https://github.com/neuecc/UniRx/archive/5.5.0.zip"));
-		});
-
+			{
+				ObservableWWW.GetWWW(url, null, progressNotifier)
+				.Do(action => button.interactable = true)
+				.SubscribeToText(text, str => "WWW完了");
+			});
 	}
-
+	
 	/// <summary>
 	/// urlを指定して、完了したらコンソールに「WWW完了」って表示するコルーチン
 	/// </summary>
