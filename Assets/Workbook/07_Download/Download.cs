@@ -1,7 +1,5 @@
 ﻿/*
-
-https://mobcast.atlassian.net/wiki/pages/viewpage.action?pageId=79921162
-
+ * 
 【WWWを使った通信】
 Unityのスクリプトより、以下のzipファイルをダウンロードしなさい。
 ただし、ローカルストレージに保存する必要はありません。
@@ -13,12 +11,16 @@ https://docs.unity3d.com/ja/current/ScriptReference/WWW.html
 ・初めの状態は、ボタンを押すとWWW.Getを使ってダウンロードが実行され、完了時にコンソールに「WWW完了」と表示されます。確認しなさい。
 ・WWW.Getを使ってダウンロードしなさい。完了後、Textに「WWW完了」と表示しなさい。
 ・WWW.Getを使って、プログレスバー付きでダウンロードしなさい。
+・WWW.Getを使って、Textに「現在のダウンロード済みサイズ/ダウンロードサイズ」を表示しなさい。
+　　例：100KB / 2.7MB、100000 / 2700000 なんでもいいです
 
 ※練習問題で利用したスクリプトは、残しておきましょう。のちほど、WWWとObservableWWWと比較します。
 
 （問題）
 ・ObservableWWW.Getを使って、ダウンロードしなさい。完了後、Textに「ObservableWWW完了」と表示しなさい。
 ・ObservableWWW.Getを使って、プログレスバー付きでダウンロードしなさい。
+・ObservableWWW.Getを使って、Textに「現在のダウンロード済みサイズ/ダウンロードサイズ」を表示しなさい。
+　　例：100KB / 2.7MB、100000 / 2700000 なんでもいいです
 ・通信中はボタンを押せない(interactable=false)ようにしなさい。
 
 */
