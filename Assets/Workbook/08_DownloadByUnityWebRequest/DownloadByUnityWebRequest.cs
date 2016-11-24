@@ -44,25 +44,56 @@ using UniRx;
 using UniRx.Triggers;
 using System;
 using System.Linq;
+using UniRx.Diagnostics;
 
 
 public class DownloadByUnityWebRequest : MonoBehaviour
 {
 
-	[SerializeField]Button button;
+	[SerializeField]Button downLoadButton;
+	[SerializeField]Button cancelButton;
 	[SerializeField]Text text;
 	[SerializeField]Slider progressBar;
 
+	private string url = "https://github.com/neuecc/UniRx/archive/5.5.0.zip";
 
 	// Use this for initialization
 	void Start()
 	{
-		button.OnClickAsObservable()
-			.Subscribe(_ =>
+		var progressNotifier = new ScheduledNotifier<UnityWebRequest>();
+		progressNotifier.Subscribe(x => 
 		{
-			StartCoroutine(DownloadWebRequest("https://github.com/neuecc/UniRx/archive/5.5.0.zip"));
+			progressBar.value = x.downloadProgress;
+			text.text = x.downloadedBytes.ToString();
 		});
+
+		IDisposable webRequestStream = null;
+		downLoadButton.OnClickAsObservable()
+			.Do(action => text.text = "WebRequest開始")
+			.Do(action => ButtonChange(true))
+			.Subscribe(_ =>
+			{
+				webRequestStream = ObservableWebRequest.Get((url), null, null, progressNotifier)
+				.Do(action => ButtonChange(false))
+				.DoOnCancel(() => ButtonChange(false))
+				.SubscribeToText(text, unityWebRequest => "WebRequest完了\nダウンロードサイズ : " + unityWebRequest.downloadedBytes);
+			});
+		
+		cancelButton.OnClickAsObservable()
+			.Where(_ => webRequestStream != null)
+			.Subscribe(x => webRequestStream.Dispose() );
 	}
+
+	private void ButtonChange(bool downLoadOn)
+	{
+		downLoadButton.interactable = !downLoadOn;
+		cancelButton.interactable = downLoadOn;
+
+		if (downLoadOn == false)
+			progressBar.value = 0;
+		
+	}
+
 
 	/// <summary>
 	/// urlを指定して、完了したらコンソールに「WebRequest完了」って表示するコルーチン
@@ -72,7 +103,7 @@ public class DownloadByUnityWebRequest : MonoBehaviour
 		Debug.Log("WebRequest開始");
 		UnityWebRequest web = UnityWebRequest.Get(url);
 		yield return web.Send();
-
+	
 		Debug.Log("WebRequest完了: ダウンロードサイズ" + web.downloadedBytes);
 	}
 }

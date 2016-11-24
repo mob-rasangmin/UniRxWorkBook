@@ -53,18 +53,18 @@ namespace UniRx
 			return web;
 		}
 
-		public static IObservable<UnityWebRequest> Get(string url, Hash headers = null, IProgress<float> reportProgress = null)
+		public static IObservable<UnityWebRequest> Get(string url, Hash headers = null, IProgress<float> reportProgress = null, IProgress<UnityWebRequest> webRequestProgress =null)
 		{
-			return ObservableUnity.FromCoroutine<UnityWebRequest>((observer, cancellation) => Fetch(CreateWebRequest(url, null, headers), observer, reportProgress, cancellation));
+			return ObservableUnity.FromCoroutine<UnityWebRequest>((observer, cancellation) => Fetch(CreateWebRequest(url, null, headers), observer, reportProgress, webRequestProgress, cancellation));
 		}
 
-		public static IObservable<UnityWebRequest> Post(string url, byte[] postData, Hash headers = null, IProgress<float> reportProgress = null)
+		public static IObservable<UnityWebRequest> Post(string url, byte[] postData, Hash headers = null, IProgress<float> reportProgress = null, IProgress<UnityWebRequest> webRequestProgress = null)
 		{
-			return ObservableUnity.FromCoroutine<UnityWebRequest>((observer, cancellation) => Fetch(CreateWebRequest(url, postData, headers), observer, reportProgress, cancellation));
+			return ObservableUnity.FromCoroutine<UnityWebRequest>((observer, cancellation) => Fetch(CreateWebRequest(url, postData, headers), observer, reportProgress, webRequestProgress, cancellation));
 		}
 
 
-		static IEnumerator Fetch(UnityWebRequest www, IObserver<UnityWebRequest> observer, IProgress<float> reportProgress, CancellationToken cancel)
+		static IEnumerator Fetch(UnityWebRequest www, IObserver<UnityWebRequest> observer, IProgress<float> reportProgress, IProgress<UnityWebRequest> webRequestProgress, CancellationToken cancel)
 		{
 			www.Send();
 
@@ -77,6 +77,19 @@ namespace UniRx
 						try
 						{
 							reportProgress.Report(www.downloadProgress);
+						}
+						catch (Exception ex)
+						{
+							observer.OnError(ex);
+							yield break;
+						}
+					}
+
+					if (webRequestProgress != null)
+					{
+						try
+						{
+							webRequestProgress.Report(www);
 						}
 						catch (Exception ex)
 						{
