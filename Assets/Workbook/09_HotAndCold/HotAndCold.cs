@@ -13,7 +13,7 @@ using UniRx;
 using UniRx.Triggers;
 using System;
 using System.Linq;
-
+using UniRx.Diagnostics;
 
 public class HotAndCold : MonoBehaviour
 {
@@ -26,6 +26,17 @@ public class HotAndCold : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
+		var hotSteam = button.OnClickAsObservable()
+			.Delay(TimeSpan.FromSeconds(1))
+			.Select(_ => "Clicked!")
+			.Debug("Hot")
+			.Publish()
+			.RefCount();
+
+		hotSteam.SubscribeToText(textA);
+		hotSteam.SubscribeToText(textB);
+
+		/* Origin
 		button.OnClickAsObservable()
 			.Delay(TimeSpan.FromSeconds(1))
 			.Select(_ => "Clicked!")
@@ -35,5 +46,6 @@ public class HotAndCold : MonoBehaviour
 			.Delay(TimeSpan.FromSeconds(1))
 			.Select(_ => "Clicked!")
 			.SubscribeToText(textB);
+		*/
 	}
 }
