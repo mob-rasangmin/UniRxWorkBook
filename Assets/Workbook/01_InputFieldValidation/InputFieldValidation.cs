@@ -12,6 +12,7 @@ Buttonをクリックした時に、InputFieldで入力した値をTextに表示
 using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
+using UniRx.Diagnostics;
 
 public class InputFieldValidation : MonoBehaviour
 {
@@ -23,6 +24,16 @@ public class InputFieldValidation : MonoBehaviour
 
 	void Start()
 	{
-		//...
+		var inputFieldSteam = inputField.OnValueChangedAsObservable();
+
+		inputFieldSteam
+			.Select(str => str.Length != 0 && str != text.text)
+			.StartWith(false)
+			.SubscribeToInteractable(button);
+
+		button.OnClickAsObservable()
+			.Select( value => inputField.text )
+			.SubscribeToText(text);
+
 	}
 }
