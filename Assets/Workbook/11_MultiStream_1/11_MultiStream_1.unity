@@ -1762,7 +1762,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Lower Case Check
+  m_Text: Numeric Check
 --- !u!222 &1941678206
 CanvasRenderer:
   m_ObjectHideFlags: 0
