@@ -36,9 +36,6 @@ public class MultiStream_1 : MonoBehaviour
 	[SerializeField]Toggle toggleC;
 	[SerializeField]Toggle toggleD;
 
-	int onNextCount = 0;
-	ISubject<int> subject;
-
 	// Use this for initialization
 	void Start ()
 	{
