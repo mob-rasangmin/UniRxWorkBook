@@ -23,18 +23,25 @@ public class FpsCounter : MonoBehaviour
 	[SerializeField]Text textFPS;
 	[SerializeField]Button buttonLoad;
 	[SerializeField][Range(1000,3000)] int loadLevel = 2000;
-
+	
 	// Use this for initialization
 	void Start ()
 	{
 		//テキストにFPSを表示する.
-
-
+		this.UpdateAsObservable()
+			.Select( value => Time.unscaledDeltaTime )	
+			.Buffer( TimeSpan.FromSeconds(0.2f) )			//更新時間
+			.Select( valueList => 1 / valueList.Average() )	//平均を求めた後、FPS値を計算する
+			.SubscribeToText(textFPS, str => string.Format("FPS: {0:F1}", str));
 
 		//ボタンを押すと、意図的に負荷(Load)をかけ、FPSを低下させる.
 		//引数が大きくなるほど、大きな負荷になる.
 		buttonLoad.OnClickAsObservable()
 			.Subscribe (_=>Load(loadLevel));
+
+		//PressRepeatを拡張メソッド化.
+		buttonLoad.OnRepeatPressAsObservable()
+			.Subscribe(_ => Load(loadLevel));
 	}
 
 	/// <summary>
@@ -47,6 +54,23 @@ public class FpsCounter : MonoBehaviour
 
 		//15000文字以上Debug.Logするとエラーになった覚えがあるので、エラー回避.
 		Debug.Log (value.Substring(0,Mathf.Min(value.Length, 15000)));
+	}
+}
+
+/// <summary>
+/// 拡張メソッド.
+/// </summary>
+public static class ExtensionMethodsForFpsCounter
+{
+	/// <summary>
+	/// PressRepeat拡張メソッド.
+	/// </summary>
+	public static IObservable<Unit> OnRepeatPressAsObservable(this Button component)
+	{
+		return component.UpdateAsObservable()
+			.SkipUntil(component.OnPointerDownAsObservable())
+			.TakeUntil(component.OnPointerUpAsObservable())
+			.Repeat();
 	}
 }
 
