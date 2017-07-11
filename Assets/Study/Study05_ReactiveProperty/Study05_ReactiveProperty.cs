@@ -27,7 +27,7 @@ namespace UniRxWorkBook.Study
 					stringReactiveProperty,
 					(number, str) => str + " : " + number
 				)
-				.Debug("CombineLatest")
+				.Debug("CombineLatest")	//.Debugはログを取るためのオペレータ。値自体に何も操作しない。
 				.SubscribeToText(log)
 				.AddTo(this);
 		}
